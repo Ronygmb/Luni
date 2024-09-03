@@ -8,6 +8,20 @@ from produto.models import CategoriaProduto, Produto, Tamanho
 
 
 def home(request):
+    """
+    View para a página principal do site
+
+    Aceita os seguintes par metros via GET:
+        - pesquisa: texto para pesquisar produtos
+        - categoria: id da categoria para filtrar produtos
+        - preco_min: pre o mínimo para filtrar produtos
+        - preco_max: pre o máximo para filtrar produtos
+        - tamanho: id do tamanho para filtrar produtos
+        - sort: ordena o dos produtos (preco_asc ou preco_desc)
+
+    Retorna uma lista de produtos filtrada e ordenada de acordo com os parâmetros
+    e uma lista de categorias para o menu de categorias do site.
+    """
     produtos = Produto.objects.all()
     
     # Filtros
@@ -93,4 +107,7 @@ def home(request):
 
 @login_required
 def settings(request):
+    """
+    View para a página de configurações do site
+    """
     return render(request, 'principal/settings.html', {})

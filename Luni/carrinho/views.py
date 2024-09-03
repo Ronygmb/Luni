@@ -10,6 +10,17 @@ from .models import Carrinho, ItemCarrinho
 
 @login_required
 def carrinho(request, id=None):
+    """
+    Mostra o carrinho de compras de um usuário.
+
+    Se o usuário for administrador, pode visualizar o carrinho de outro usuário
+    passando o id do usuário como parâmetro.
+
+    :param request: Requisição do HTTP
+    :param id: Id do usuário cujo carrinho deve ser mostrado
+    :return: Uma página HTML com o carrinho de compras do usuário
+    """
+
     if id is None:
         user = request.user
     elif request.user.is_superuser:
@@ -37,6 +48,13 @@ def carrinho(request, id=None):
 @require_POST
 @login_required
 def atualizar_carrinho(request):
+    """
+    Atualiza o carrinho de compras do usuário com base em dados
+    enviados via POST.
+
+    :param request: Requisição do HTTP
+    :return: Uma página de redirecionamento para a página do carrinho
+    """
     for key, value in request.POST.items():
         if key.startswith('quantidade_'):
             item_id = key.split('_')[1]
@@ -53,6 +71,17 @@ def atualizar_carrinho(request):
 
 @require_http_methods(["GET", "POST"])
 def confirmar_compra(request):
+    """
+    Confirma a compra do carrinho de compras do usuário.
+
+    Se o request for POST, cria um objeto Pedido com os dados do carrinho,
+    deleta os itens do carrinho e redireciona para a página de pedidos.
+    Se o request for GET, renderiza a página de confirmação de compra com
+    os dados do carrinho.
+
+    :param request: Requisição do HTTP
+    :return: Uma página de redirecionamento para a página de pedidos ou a página de confirmação de compra
+    """
     if request.method == "POST":
         usuario = request.user
         carrinho = Carrinho.objects.get(usuario=usuario)

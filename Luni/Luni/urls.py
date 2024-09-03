@@ -6,6 +6,24 @@ from django.conf.urls.static import static
 
 
 def error_handler(request, exception=None, status_code=None):
+
+    """
+    Tratador de erros genérico para o Django.
+
+    Esta view recebe um request, um exception e um status_code como parâmetros.
+    Se o status_code n o for informado, ele padroniza-se como 500.
+    A view retorna um HttpResponse com o status code informado e um template
+    chamado 'error.html' com dois par metros: status_code e exception.
+    O template 'error.html' é responsável por exibir uma página de erro amigável
+    ao usuário.
+
+    :param request: O request atual.
+    :type request: django.http.HttpRequest
+    :param exception: O exception que ocorreu.
+    :type exception: Exception
+    :param status_code: O status code que será retornado.
+    :type status_code: int
+    """
     if status_code is None:
         status_code = 500
     context = {

@@ -8,6 +8,14 @@ from .forms import *
 @group_required('Administradores')
 @login_required
 def listar_estampas(request):
+    """
+    Lista todas as estampas do banco de dados.
+
+    Requer permiss o de Administrador.
+
+    :param request: Requisição do usuário.
+    :return: Retorna uma página HTML com a lista de estampas.
+    """
     estampas = Estampa.objects.all()
     return render(request, 'estampa/listar_estampas.html', {'estampas': estampas})
 
@@ -15,6 +23,14 @@ def listar_estampas(request):
 @group_required('Administradores')
 @login_required
 def create_estampa(request):
+    """
+    Cria uma estampa.
+
+    Requer permiss o de Administrador.
+
+    :param request: Requisição do usuário.
+    :return: Redireciona para a página de listagem de estampas.
+    """
     if request.method == "POST":
         form = EstampaForm(request.POST, request.FILES)
         if form.is_valid():
@@ -29,7 +45,15 @@ def create_estampa(request):
 
 @group_required('Administradores')
 @login_required
-def edit_estampa(request, id):
+    """
+    Edita uma estampa pelo id.
+
+    Requer permissão de Administrador.
+
+    :param request: Requisição do usuário.
+    :param id: Id da estampa a ser editada.
+    :return: Redireciona para a página de listagem de estampas.
+    """
     estampa = Estampa.objects.get(pk = id)
     print(estampa)
 
@@ -54,6 +78,15 @@ def edit_estampa(request, id):
 @group_required('Administradores')
 @login_required
 def remove_estampa(request, id):
+    """
+    Remove uma estampa pelo id.
+
+    Requer permiss o de Administrador.
+
+    :param request: Requisição do usuário.
+    :param id: Id da estampa a ser removida.
+    :return: Redireciona para a página de listagem de estampas.
+    """
     estampa = Estampa.objects.filter(pk = id).first()
     
     if estampa: estampa.delete()

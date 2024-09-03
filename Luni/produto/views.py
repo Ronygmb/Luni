@@ -12,6 +12,12 @@ from .forms import *
 
 @login_required
 def detalhes_produto(request, id):
+    """
+    Mostra os detalhes de um produto.
+    
+    :param id: identificador do produto
+    :return: uma renderização da página de detalhes do produto
+    """
     produto = Produto.objects.filter(id=id).first()
     
     if not produto:
@@ -23,6 +29,14 @@ def detalhes_produto(request, id):
 @login_required
 @group_required('Administradores')
 def listar_produtos(request):
+    """
+    Mostra uma lista de todos os produtos cadastrados no sistema.
+    
+    Requer permissão de Administrador.
+    
+    :param request: Requisição do usuário.
+    :return: Uma renderização da página de listagem de produtos.
+    """
     produtos = Produto.objects.all()
     
     return render(request, 'produto/listar_produtos.html', {'produtos': produtos})
@@ -31,6 +45,14 @@ def listar_produtos(request):
 @login_required
 @group_required('Administradores')
 def listar_tipos_produtos(request):
+    """
+    Mostra uma lista de todos os tipos de produtos cadastrados no sistema.
+    
+    Requer permissão de Administrador.
+    
+    :param request: Requisição do usuário.
+    :return: Uma renderização da página de listagem de tipos de produtos.
+    """
     form_tipo = CategoriaProdutoForm()
     tipos_produtos = CategoriaProduto.objects.all()
     
@@ -40,6 +62,14 @@ def listar_tipos_produtos(request):
 @login_required
 @group_required('Administradores')
 def create_produto(request):
+    """
+    Cria um novo produto.
+    
+    Requer permissão de Administrador.
+    
+    :param request: Requisição do usuário.
+    :return: Redireciona para a página de listagem de produtos.
+    """
     if request.method == "POST":
         form = ProdutoForm(request.POST, request.FILES)
         if form.is_valid():
@@ -55,6 +85,15 @@ def create_produto(request):
 @login_required
 @group_required('Administradores')
 def edit_produto(request, id):
+    """
+    Edita um produto existente.
+
+    Requer permissão de Administrador.
+
+    :param request: Requisição do usuário.
+    :param id: Id do produto a ser editado.
+    :return: Redireciona para a página de listagem de produtos.
+    """
     produto = Produto.objects.get(pk = id)
     print(produto)
 
@@ -79,6 +118,15 @@ def edit_produto(request, id):
 @login_required
 @group_required('Administradores')
 def remove_produto(request, id):
+    """
+    Remove um produto existente.
+
+    Requer permissão de Administrador.
+
+    :param request: Requisição do usuário.
+    :param id: Id do produto a ser deletado.
+    :return: Redireciona para a página de listagem de produtos.
+    """
     produto = Produto.objects.filter(pk = id)
     
     if produto: produto.delete()
@@ -89,6 +137,14 @@ def remove_produto(request, id):
 @login_required
 @group_required('Administradores')
 def create_tipo_produto(request):
+    """
+    Cria um novo tipo de produto.
+
+    Requer permissão de Administrador.
+
+    :param request: Requisição do usuário.
+    :return: Redireciona para a página de listagem de tipos de produtos.
+    """
     if request.method == "POST":
         form = CategoriaProdutoForm(request.POST)
         if form.is_valid():
@@ -104,6 +160,15 @@ def create_tipo_produto(request):
 @login_required
 @group_required('Administradores')
 def edit_tipo_produto(request, id):
+    """
+    Edita um tipo de produto pelo id.
+
+    Requer permissão de Administrador.
+
+    :param request: Requisição do usuário.
+    :param id: Id do tipo de produto a ser editado.
+    :return: Redireciona para a página de listagem de tipos de produtos.
+    """
     categoriaProduto = CategoriaProduto.objects.get(pk = id)
     print(categoriaProduto)
 
@@ -123,6 +188,15 @@ def edit_tipo_produto(request, id):
 @login_required
 @group_required('Administradores')
 def remove_tipo_produto(request, id):
+    """
+    Remove um tipo de produto pelo id.
+
+    Requer permissão de Administrador.
+
+    :param request: Requisição do usuário.
+    :param id: Id do tipo de produto a ser removido.
+    :return: Redireciona para a página de listagem de tipos de produtos.
+    """
     categoriaProduto = CategoriaProduto.objects.filter(pk = id).first()
     
     if categoriaProduto: categoriaProduto.delete()
@@ -131,6 +205,12 @@ def remove_tipo_produto(request, id):
 
 
 def pesquisar_produtos(request):
+    """
+    Mostra a lista de produtos filtrados por nome, descriço, categoria, preco, tamanho e ordenados por preco.
+    
+    :param request: Requisição do usuário.
+    :return: Retorna a página de listagem de produtos.
+    """
     produtos = Produto.objects.all()
     
     # Filtros
@@ -193,6 +273,16 @@ def pesquisar_produtos(request):
 
 @login_required
 def adicionar_ao_carrinho(request, id):
+    """
+    Adiciona um produto ao carrinho do usuário.
+
+    Se o produto já estiver no carrinho, soma a quantidade desejada à quantidade atual.
+    Se o produto não estiver no carrinho, adiciona-o com a quantidade desejada.
+
+    :param request: Requisição do usuário.
+    :param id: ID do produto a ser adicionado.
+    :return: Redireciona para a página do carrinho.
+    """
     if request.method == 'POST':
         produto = get_object_or_404(Produto, id=id)
         usuario = request.user
@@ -230,6 +320,12 @@ def adicionar_ao_carrinho(request, id):
 
 @login_required
 def remover_do_carrinho(request, id):
+    """
+    Remove um produto do carrinho do usuário.
+
+    :param id: ID do produto a ser removido.
+    :return: Redireciona para a página do carrinho.
+    """
     produto = get_object_or_404(Produto, id=id)
     usuario = request.user
     carrinho, created = Carrinho.objects.get_or_create(usuario=usuario)
