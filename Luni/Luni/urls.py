@@ -1,22 +1,36 @@
-"""
-URL configuration for Luni project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
-from django.urls import path
+from django.shortcuts import redirect, render
+from django.urls import include, path
+from django.conf import settings
+from django.conf.urls.static import static
+
+
+def error_handler(request, exception=None, status_code=None):
+    if status_code is None:
+        status_code = 500
+    context = {
+        'status_code': status_code,
+        'exception': exception,
+    }
+    return render(request, 'error.html', context, status=status_code)
+
+
+handler400 = error_handler
+handler403 = error_handler
+handler404 = error_handler
+handler500 = error_handler
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
+    path("", include("principal.urls"), name="index"),
+    path("user/", include("usuario.urls"), name='usuario'),
+    path("produto/", include("produto.urls"), name='produto'),
+    path("estampa/", include("estampa.urls"), name='estampa'),
+    path("carrinho/", include("carrinho.urls"), name='carrinho'),
+    path("pedido/", include("pedido.urls"), name='pedido'),
+    path("accounts/", include("django.contrib.auth.urls")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
