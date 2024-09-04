@@ -45,6 +45,7 @@ def create_estampa(request):
 
 @group_required('Administradores')
 @login_required
+def edit_estampa(request, id):
     """
     Edita uma estampa pelo id.
 
